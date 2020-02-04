@@ -4,7 +4,6 @@ namespace NGiraud\NovaTranslatable;
 
 use Exception;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Spatie\Translatable\HasTranslations;
 
 class FieldMacros
 {
@@ -14,8 +13,9 @@ class FieldMacros
             $originalComponent = $this->component;
 
             $this->resolveUsing(function ($value, $resource, $attribute) use ($locales, $originalComponent) {
+                // We check if the model has the Spatie's translatable trait
                 throw_if(
-                    !in_array(HasTranslations::class, class_uses($resource)),
+                    !method_exists($resource, 'guardAgainstNonTranslatableAttribute'),
                     new Exception("You must attach the \Spatie\Translatable\HasTranslations trait to model " . get_class($resource) . " in order to use the translatable functionality.")
                 );
 

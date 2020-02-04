@@ -2,6 +2,10 @@
 
 All notable changes to `ngiraud/nova-translatable-v2` will be documented in this file
 
+## 1.0.1 - 2020-02-04
+
+- Changing the way that we check if the model has the Spatie's translatable trait
+
 ## 1.0.0 - 2020-02-04
 
 - initial release
