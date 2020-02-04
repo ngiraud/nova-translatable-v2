@@ -33,9 +33,8 @@ class FieldMacros
                     ],
                 ]);
 
-                // If it's a CREATE or UPDATE request, we need to trick the validator a bit
+                // If it's a CREATE or UPDATE request, we want to apply rules to each locale
                 if (in_array(request()->method(), ['PUT', 'POST'])) {
-//                    dd($this->rules);
                     $this->attribute = "{$this->attribute}.*";
                 }
 
@@ -43,6 +42,10 @@ class FieldMacros
             });
 
             $this->fillUsing(function (NovaRequest $request, $model, $attribute, $requestAttribute) {
+                // Because we add a ".*" to the attribute in the resolveUsing method,
+                // we need to remove to check if the attribute exists in the request
+                $requestAttribute = str_replace('.*', '', $requestAttribute);
+
                 if ($request->exists($requestAttribute)) {
                     throw_if(
                         !is_array($request[$requestAttribute]),
@@ -62,7 +65,7 @@ class FieldMacros
                     })->filter()->toArray();
 
                     // We set the new values
-                    $model->{$attribute} = $data;
+                    $model->{$requestAttribute} = $data;
                 }
             });
 
