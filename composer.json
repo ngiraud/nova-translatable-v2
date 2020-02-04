@@ -1,0 +1,50 @@
+{
+    "name": "ngiraud/nova-translatable-v2",
+    "description": "A laravel-translatable extension for Laravel Nova. Inspired by optimistdigital/nova-translatable",
+    "keywords": [
+        "laravel",
+        "nova",
+        "translatable",
+        "i18n",
+        "translate"
+    ],
+    "authors": [
+        {
+            "name": "Nicolas Giraud",
+            "email": "nicolas.giraud01@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.0",
+        "laravel/nova": "^2.9",
+        "spatie/laravel-translatable": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "NGiraud\\NovaTranslatable\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NGiraud\\NovaTranslatable\\FieldServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
