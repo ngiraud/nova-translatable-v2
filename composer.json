@@ -27,6 +27,11 @@
         "laravel/nova": "^2.9",
         "spatie/laravel-translatable": "^4.0"
     },
+    "require-dev": {
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "^3.8|^4.0",
+        "phpunit/phpunit": "8.0"
+    },
     "autoload": {
         "psr-4": {
             "NGiraud\\NovaTranslatable\\": "src/"
@@ -34,6 +39,11 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NGiraud\\NovaTranslatable\\Tests\\": "tests"
+        }
     },
     "extra": {
         "laravel": {
