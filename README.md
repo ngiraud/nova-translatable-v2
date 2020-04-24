@@ -6,7 +6,7 @@ This package is inspired by [optimistdigital/nova-translatable](https://github.c
 
 ## Requirements
 
-- `laravel/nova: ^2.9`
+- `laravel/nova: ^3.0`
 - `spatie/laravel-translatable: ^4.0`
 
 You first need to set up the [spatie/laravel-translatable](https://github.com/spatie/laravel-translatable) package.

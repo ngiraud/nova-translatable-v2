@@ -23,8 +23,8 @@
         }
     ],
     "require": {
-        "php": ">=7.1.0",
-        "laravel/nova": "^2.9",
+        "php": ">=7.2.5",
+        "laravel/nova": "^3.0",
         "spatie/laravel-translatable": "^4.0"
     },
     "autoload": {
