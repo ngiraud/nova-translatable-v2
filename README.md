@@ -86,7 +86,8 @@ class Product extends Resource
                 ->translatable()
                 ->rules(['max:255'])
                 ->rulesFor('fr', [
-                    'required'
+                    'required',
+                    'unique:products,sku->fr,{{resourceId}}'
                 ])
     }
 }

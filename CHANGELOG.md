@@ -2,6 +2,10 @@
 
 All notable changes to `ngiraud/nova-translatable-v2` will be documented in this file
 
+## 1.0.4 - 2020-06-08
+
+- Add the ability to use validation rules with {{resourceId}} parameter, thanks to @martinhummer.
+
 ## 1.0.3 - 2020-04-24
 
 - Laravel 7 compatibility
