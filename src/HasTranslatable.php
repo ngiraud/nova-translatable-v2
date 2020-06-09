@@ -46,21 +46,7 @@ trait HasTranslatable
             }
         }
 
-        $replacements = array_filter([
-            '{{resourceId}}' => str_replace(['\'', '"', ',', '\\'], '', $request->resourceId),
-        ]);
-
-        if (empty($replacements)) {
-            return $rules;
-        }
-
-        return collect($rules)->map(function ($rules) use ($replacements) {
-            return collect($rules)->map(function ($rule) use ($replacements) {
-                return is_string($rule)
-                    ? str_replace(array_keys($replacements), array_values($replacements), $rule)
-                    : $rule;
-            })->all();
-        })->all();
+        return parent::formatRules($request, $rules);
     }
 
     /**
