@@ -2,6 +2,8 @@
 
 namespace NGiraud\NovaTranslatable;
 
+use Illuminate\Support\MessageBag;
+use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 trait HasTranslatable
@@ -59,5 +61,36 @@ trait HasTranslatable
                     : $rule;
             })->all();
         })->all();
+    }
+
+    /**
+     * Handle any post-validation processing.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    protected static function afterValidation(NovaRequest $request, $validator)
+    {
+        $locales = resolveLocales();
+
+        foreach ($validator->errors()->getMessages() as $attribute => $errors) {
+            [$attr, $locale] = explode('.', $attribute);
+
+            $translated = trans('validation.attributes.'.$attr);
+
+            if(Str::startsWith($translated, 'validation.attributes.')) {
+                $translated = $attr;
+            }
+
+            $translated .= " ({$locales[$locale]})";
+
+            foreach ($errors as $error) {
+                $validator->errors()->add(
+                    str_replace('.', '->', $attribute),
+                    str_replace($attribute, $translated, $error)
+                );
+            }
+        }
     }
 }
