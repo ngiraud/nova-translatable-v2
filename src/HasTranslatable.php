@@ -2,7 +2,7 @@
 
 namespace NGiraud\NovaTranslatable;
 
-use Illuminate\Support\MessageBag;
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Str;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -19,34 +19,38 @@ trait HasTranslatable
     protected static function formatRules(NovaRequest $request, array $rules)
     {
         $rules = parent::formatRules($request, $rules);
+        $locales = resolveLocales();
+
+        $newRules = [];
 
         foreach ($rules as $attribute => $attributeRules) {
-            // We do not have single rules for translatable
-            if (empty($attributeRules['translatable'])) {
+            // Field is not a translatable field
+            if (!isset($attributeRules['translatable'])) {
+                $newRules[$attribute] = $attributeRules;
                 continue;
             }
 
-            foreach ($attributeRules['translatable'] as $locale => $localeRules) {
-                // We copy the locale rule into the rules array
-                // i.e. ['name.fr' => ['required']]
-                $rules[str_replace('.*', '', $attribute) . ".{$locale}"] = $localeRules;
+            $attributeName = $attribute;
 
-                // We unset the translatable locale entry since we copy the rule into the rules array
-                unset($rules[$attribute]['translatable'][$locale]);
+            if(empty($attributeRules['translatable'])) {
+                foreach (array_keys($locales) as $locale) {
+                    $newRules[str_replace('.*', '', $attributeName) . ".{$locale}"] = collect($attributeRules)->except('translatable')->all();
+                }
+            } else {
+                foreach ($attributeRules['translatable'] as $locale => $localeRules) {
+                    // We copy the locale rule into the rules array
+                    // i.e. ['name.fr' => ['required']]
+                    $newRules[str_replace('.*', '', $attributeName) . ".{$locale}"] = collect($attributeRules)->except('translatable')->merge($localeRules)->all();
+                }
             }
 
-            // We unset the translatable entry once we lopped on each locale
-            if (isset($rules[$attribute]['translatable'])) {
-                unset($rules[$attribute]['translatable']);
-            }
-
-            // We unset the attribute entry if there is no other rule
-            if (empty($rules[$attribute])) {
-                unset($rules[$attribute]);
+            // We unset the translatable entry
+            if (isset($newRules[$attributeName]['translatable'])) {
+                unset($newRules[$attributeName]['translatable']);
             }
         }
 
-        return parent::formatRules($request, $rules);
+        return parent::formatRules($request, $newRules);
     }
 
     /**
@@ -60,20 +64,25 @@ trait HasTranslatable
     {
         $locales = resolveLocales();
 
-        foreach ($validator->errors()->getMessages() as $attribute => $errors) {
-            [$attr, $locale] = explode('.', $attribute);
-
-            $translated = trans('validation.attributes.'.$attr);
-
-            if(Str::startsWith($translated, 'validation.attributes.')) {
-                $translated = $attr;
+        dd($validator->errors()->messages());
+        foreach ($validator->errors()->messages() as $attribute => $errors) {
+            // We ensure that we only treat translatable fields
+            if(!Str::startsWith($attribute, 'translatable-field.')) {
+                continue;
             }
 
+            [$translatableLabel, $attr, $locale] = explode('.', $attribute);
+
+            if(!in_array($locale, array_keys($locales))) {
+                continue;
+            }
+
+            $translated = Lang::has('validation.attributes.'.$attr) ? trans('validation.attributes.'.$attr) : $attr;
             $translated .= " ({$locales[$locale]})";
 
             foreach ($errors as $error) {
                 $validator->errors()->add(
-                    str_replace('.', '->', $attribute),
+                    str_replace($translatableLabel.'.', '', $attribute),
                     str_replace($attribute, $translated, $error)
                 );
             }
