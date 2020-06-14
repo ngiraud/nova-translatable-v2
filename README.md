@@ -1,6 +1,6 @@
 # Nova Translatable V2
 
-This [Laravel Nova](https://nova.laravel.com) allows you to make any input field using the `spatie/laravel-translatable` package compatible and localisable.
+This [Laravel Nova](https://nova.laravel.com) package allows you to make any input field using the `spatie/laravel-translatable` package compatible and localisable.
 
 This package is inspired by [optimistdigital/nova-translatable](https://github.com/optimistdigital/nova-translatable).
 

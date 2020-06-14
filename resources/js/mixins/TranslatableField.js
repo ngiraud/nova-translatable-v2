@@ -80,6 +80,7 @@ export default {
             return {
                 ...this.field,
                 value: value || '',
+                validationKey: `${this.field.validationKey}.${locale.key}`,
                 attribute: `${this.field.attribute}.${locale.key}`,
             }
         }

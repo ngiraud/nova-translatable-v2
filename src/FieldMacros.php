@@ -12,6 +12,10 @@ class FieldMacros
         return function ($locales = null) {
             $originalComponent = $this->component;
 
+            if(!isset($this->rules['translatable'])) {
+                $this->rules['translatable'] = [];
+            }
+
             $this->resolveUsing(function ($value, $resource, $attribute) use ($locales, $originalComponent) {
                 // We check if the model has the Spatie's translatable trait
                 throw_if(
@@ -35,7 +39,7 @@ class FieldMacros
 
                 // If it's a CREATE or UPDATE request, we want to apply rules to each locale
                 if (in_array(request()->method(), ['PUT', 'POST'])) {
-                    $this->attribute = "{$this->attribute}.*";
+                    $this->attribute = "translatable-field.{$this->attribute}.*";
                 }
 
                 return $this->resolveAttribute($resource, $attribute);
