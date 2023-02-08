@@ -65,7 +65,7 @@ class FieldMacros
                     })->filter()->toArray();
 
                     // We set the new values
-                    $model->{$requestAttribute} = $data;
+                    $model->replaceTranslations($requestAttribute, $data);
                 }
             });
 
