@@ -62,7 +62,7 @@ class FieldMacros
                         }
 
                         return empty($value) ? '' : $value;
-                    })->filter()->toArray();
+                    })->toArray();
 
                     // We set the new values
                     $model->replaceTranslations($requestAttribute, $data);
